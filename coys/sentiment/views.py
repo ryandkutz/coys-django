@@ -5,5 +5,6 @@ from . import scraper
 def index(request):
     return HttpResponse("test")
 def sent(request):
-    scraper.loadPost()
+    scraper.loadPostByID("x0vl1m")
+    scraper.loadComments("x0vl1m")
     return HttpResponse("sent")

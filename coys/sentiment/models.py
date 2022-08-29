@@ -13,6 +13,6 @@ class Comment(models.Model):
     id = models.CharField(max_length=50, primary_key=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     body = models.TextField(max_length=1000)
-    user = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     sentiment = models.TextField(max_length=100, default="null")
     
