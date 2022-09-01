@@ -1,9 +1,10 @@
 import praw
 from .models import User, Post, Comment
+from . import sentiment
 
 reddit = praw.Reddit(client_id='uce2S9EfyAp-BNw1L-z96g', client_secret='9uYyXFK4lFxOY5QB9dyXEEsuuhIlFA', user_agent='COYS Sentiment')
 
-#need sentiment scoring for all of this
+#need sentiment scoring for users
 
 def loadPostsNew(lim):
     posts = reddit.subreddit("coys").new(limit=lim)
@@ -30,15 +31,21 @@ def loadComments(postID):
         except User.DoesNotExist:
             u = None
         if u:
-            c = Comment(id=comment.id,post=p,body=comment.body,user=u)
+            c = Comment(id=comment.id,post=p,body=comment.body,user=u,author=u.username)
+            sentiment_data = sentiment.getCommentScore(c.body)
+            c.sentimentClass = sentiment_data[0]["label"]
+            c.sentimentScore = sentiment_data[0]["score"]
             c.save()
-            print("loaded existing user's comment")
+            print("loaded comment from existing user " + c.user.username)
             pass
         else:
             u = User(id=comment.author.id, username=comment.author.name)
             u.save()
-            c = Comment(id=comment.id,post=p,body=comment.body,user=u)
+            c = Comment(id=comment.id,post=p,body=comment.body,user=u,author=u.username)
+            sentiment_data = sentiment.getCommentScore(c.body)
+            c.sentimentClass = sentiment_data[0]["label"]
+            c.sentimentScore = sentiment_data[0]["score"]
             c.save()
-            print("loaded new user's comment")
+            print("loaded comment from new user " + c.user.username)
             pass
 
