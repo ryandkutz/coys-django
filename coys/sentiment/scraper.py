@@ -4,7 +4,8 @@ from . import sentiment
 
 reddit = praw.Reddit(client_id='uce2S9EfyAp-BNw1L-z96g', client_secret='9uYyXFK4lFxOY5QB9dyXEEsuuhIlFA', user_agent='COYS Sentiment')
 
-#need sentiment scoring for users
+#TODO: need sentiment scoring for users
+#TODO: fix 404 error with deleted? comments
 
 def loadPostsNew(lim):
     posts = reddit.subreddit("coys").new(limit=lim)
@@ -48,4 +49,16 @@ def loadComments(postID):
             c.save()
             print("loaded comment from new user " + c.user.username)
             pass
+def loadUserComments(uname):
+    target, created = User.objects.get_or_create(id=reddit.redditor(uname).id, username=uname)
+    for comment in reddit.redditor(uname).comments.new(limit=10):
+        if comment.subreddit.display_name == "coys":
+            u, created = User.objects.get_or_create(id=comment.submission.author.id, username=comment.submission.author.name)
+            p, created = Post.objects.get_or_create(id=comment.submission.id,title=comment.submission.title,body=comment.submission.selftext,user=u)
+            c = Comment(id=comment.id,post=p,body=comment.body,user=target,author=target.username)
+            sentiment_data = sentiment.getCommentScore(c.body)
+            c.sentimentClass = sentiment_data[0]["label"]
+            c.sentimentScore = sentiment_data[0]["score"]
+            c.save()
+            print(c.body)
 

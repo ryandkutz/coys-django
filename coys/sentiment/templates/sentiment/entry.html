@@ -12,13 +12,20 @@
     <h1>
         r/coys Sentiment Analysis
     </h1>
+    <p>Submit a post ID from r/coys below to view sentiment analysis on that post.</p>
     <form action="" method="post">
         {%csrf_token%}
-        {{ form }}
-        <input type="submit" value="Submit">
+        {{ postForm }}
+        <input type="submit" name="submit_postid" value="Submit Post ID">
     </form>
     <p>A Reddit post ID is the 6 characters in a Reddit post link.</p>
     <p>In the link https://www.reddit.com/r/coys/comments/bmaqia/champions_league_final_upvote_party/, the ID is "bmaqia".</p>
     <p>Load times can vary widely due to limitations with Reddit's API.</p>
+    <p>You can also submit a Reddit username below (exclude the "u/") to view analysis on comments in r/coys by that user.</p>
+    <form action="" method="post">
+        {%csrf_token%}
+        {{ userForm }}
+        <input type="submit" name="submit_username" value="Submit username">
+    </form>
 </body>
 </html>

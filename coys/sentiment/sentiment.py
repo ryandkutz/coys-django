@@ -1,5 +1,4 @@
 from transformers import pipeline
-from .models import User, Post, Comment
 
 sentiment_pipeline = pipeline("sentiment-analysis")
 
