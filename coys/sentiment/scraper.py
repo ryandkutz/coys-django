@@ -2,10 +2,7 @@ import praw
 from .models import User, Post, Comment
 from . import sentiment
 
-reddit = praw.Reddit(client_id='uce2S9EfyAp-BNw1L-z96g', client_secret='9uYyXFK4lFxOY5QB9dyXEEsuuhIlFA', user_agent='COYS Sentiment')
-
-#TODO: need sentiment scoring for users
-#TODO: fix 404 error with deleted? comments
+reddit = praw.Reddit(client_id='CLIENT-ID', client_secret='CLIENT-SECRET', user_agent='COYS Sentiment')
 
 def loadPostsNew(lim):
     posts = reddit.subreddit("coys").new(limit=lim)
